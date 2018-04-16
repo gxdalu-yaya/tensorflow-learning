@@ -18,14 +18,13 @@ self._bias = self.add_variable(
     shape=[4 * self._num_units],
     initializer=init_ops.zeros_initializer(dtype=self.dtype))
 ```
-也就是说，$W_{f}$的shape为[input_depth+hidden_size, 4*hidden_size]，不太明白，为啥bias的长度为4×self._num_units,暂时理解为C的shape为4×hiddend_size
-
+也就是说，$W_{f}$的shape为[input_depth+hidden_size, 4xhidden_size]，为什么是4×hidden_size，是因为之后要用到4份结果，即：
 ```
 # i = input_gate, j = new_input, f = forget_gate, o = output_gate
 i, j, f, o = array_ops.split(
     value=gate_inputs, num_or_size_splits=4, axis=one)
 ```
-接下来，把计算得到的结果分成4份，分别对应图中的$f_{t}$,  $i_{t}$, $o_{t}$, $j_{t}$，$j_{t}$为tanh激活函数的输入
+之后会把计算得到的结果分成4份，分别对应图中的$f_{t}$,  $i_{t}$, $o_{t}$, $j_{t}$，其中$j_{t}$为tanh激活函数的输入，也就是说，图中除了$x_{t}$之外，所有tensor的shape和hidden_size都是一样的！
 
 输出的new_c和new_h为：
 ```
