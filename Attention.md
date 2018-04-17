@@ -1,5 +1,6 @@
 # Attention学习
 ![attention](images/attention_mechanism.jpg "attention")
+
 如图所示，attention发生在decoder的每一步（时间点），主要包括以下3步：
 
 1.当前时间点的decoder隐层状态$h_{t}$,和所有的encoder隐层状态$h_{s}$,计算_attention weights_, 对应公式（1），其中score的计算方式有很多种，公式（4）为两个比较常见的计算方式，其中$h_{s}$对应attention体系中的key和value（key和value一样），$h_{t}$则对应attention体系中的query
