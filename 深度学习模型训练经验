@@ -1,0 +1,5 @@
+# batch_size对训练loss震荡的影响
+
+当数据量比较大时，使用小的batch_size, 比如数据量在500万以上，batch_size为128时，训练一个epoch之后，训练loss就会发生剧烈震荡
+
+[!]
