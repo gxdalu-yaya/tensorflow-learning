@@ -63,6 +63,26 @@ def attention_layer(from_tensor,
 
 其中因为只用到了transformer中的encoder，因此from_tensor和to_tensor是一样的，都是输入embedding后的结果，shape为[batch_size, seq_length, embedding_size]
 
+之后通过```from_tensor_2d = reshape_to_matrix(from_tensor)```，将from_tensor reshape为[batch_size * seq_length, embedding_size]，之后在做一个全连接的映射，映射为[bath_size × seq_length, num_attention_heads * size_per_head], 其中， size_per_head = hidden_size / num_attention_heads.
+
+to_tensor也会做同样的处理。
+
+之后再reshape为[batch_size, num_attention_heads, seq_length, size_per_head]
+
+得到query_layer, key_layer, value_layer, 这3个tensor都是input_embedding得到的，query、key、value都是输入本身，做self-attention.
+
+此处attention的方式也比较简单：
+```
+attention_scores = tf.matmul(query_layer, key_layer, transpose_b=True)
+attention_scores = tf.multiply(attention_scores,
+                                 1.0 / math.sqrt(float(size_per_head)))
+
+context_layer = tf.matmul(attention_probs, value_layer)
+```
+对应的公式为：$Attention(Q, K ,V) = softmax(\frac{QK^T}{\sqrt{d}})V$
+
+
+
 
 
 
