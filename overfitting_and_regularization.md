@@ -14,7 +14,7 @@
    通过一个例子，来证明为什么正则化可以防止过拟合：
    求偏导数得到：
    $$\frac{\partial C}{\partial w} = \frac{\partial C_0}{\partial w}+\frac{\lambda}{n}w$$
-   $$\frac{\partial C}{\partial w} = \frac{\partial C_0}{\partial b}$$
+   $$\frac{\partial C}{\partial b} = \frac{\partial C_0}{\partial b}$$
    那么参数更新时：
    $$b\rightarrow b-\eta\frac{\partial C_0}{\partial b}$$
    $$w\rightarrow w-\eta\frac{\partial C_0}{\partial w}-\frac{\eta\lambda}{n}w$$
