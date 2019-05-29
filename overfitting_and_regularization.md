@@ -31,3 +31,58 @@ $$=(1-\frac{\eta\lambda}{n})w-\eta\frac{\partial C_0}{\partial w}$$
 ![L1L2](./images/L1L2.png)
 如左图所示，考虑只有两个参数的情况，在（$w_1, w_2$）平面上，可以画出目标函数的等高线，而对参数的约束，见图中的黑线，L1的约束形成了一个“菱形”
 
+#### Dropout
+
+Dropout是一种廉价的Bagging集成近似，具体来说，dropout训练的模型，包括基础网络的子网络，如图所示：
+
+![dropout1](./images/dropout1.png)
+
+dropout的目标是在指数级数量的多个神经网络模型上近似bagging，直接训练这么多个模型需要花费太多运行时间和内存。
+
+dropout在训练的过程中，每次都会以一定的概率随机丢弃一些输入单元或隐藏单元，这样每次训练的都是不同的模型。
+
+
+*两个数a和b的算术平均值为$(a+b)/2$，几何平均值为$\sqrt{ab}$
+
+
+在做inference的时候，理论上bagging需要计算所有模型的算术平均结果：
+
+$$\frac{1}{k}\sum_{i=1}^{K}p^{(i)}(y|x)$$
+
+在dropout的情况下，通过掩码$u$定义每个子模型的概率分布$p(y|u,x)$。所有掩码的算术平均值为：
+
+$$\sum_{u}p(u)p(y|x,u)$$
+
+对应的几何平均值为：
+
+$$p^{-}_{ensemble}(y|x) = \sqrt[2^d]{\prod_{u}p(y|x,u)}$$
+
+
+
+
+dropout的做法是，近似计算得到所有模型的*几何平均*，所有输入单元和隐藏单元则都不会被丢弃，而是将每一个单元的权重都乘以该单元在训练过程中被包含的概率。这种方法叫做*权重比例推断（weight scaling inference rule）*
+
+# tensorflow的实现
+```
+tf.nn.dropout(
+    x,
+    keep_prob,
+    noise_shape=None,
+    seed=None,
+    name=None
+)
+```
+With probability keep_prob, outputs the input element scaled up by 1 / keep_prob, otherwise outputs 0. The scaling is so that the expected sum is unchanged.
+
+tensorflow的做法是，在训练的时候，将权重增大，即除以（1/keep_prob），而在inference的时候，权重保持不变。
+
+从另外一个角度看，dropout减小了模型的有效容量，为了抵消这种影响，需要增大模型规模。
+
+
+权重比例推断的证明：
+![dropout2](./images/dropout2.png)
+
+
+![dropout3](./images/dropout3.png)
+
+
