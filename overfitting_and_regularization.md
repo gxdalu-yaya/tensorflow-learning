@@ -33,14 +33,19 @@ $$=(1-\frac{\eta\lambda}{n})w-\eta\frac{\partial C_0}{\partial w}$$
 
 #### Dropout
 
-Dropout是一种廉价的Bagging集成近似，具体来说，dropout训练的模型，包括基础网络的子网络，如图所示：
+Dropout是一种廉价的Bagging集成近似，具体来说，dropout训练的模型，包括整个网络的所有可能的子网络，如图所示：
 
 ![dropout1](./images/dropout1.png)
 
-dropout的目标是在指数级数量的多个神经网络模型上近似bagging，直接训练这么多个模型需要花费太多运行时间和内存。
+dropout的目标是在指数级数量的这么多个神经网络模型上近似bagging，但是直接训练这么多个模型需要花费太太太太太太多运行时间和内存。
 
-dropout在训练的过程中，每次都会以一定的概率随机丢弃一些输入单元或隐藏单元，这样每次训练的都是不同的模型。
+所以dropout的作者提出了一种近似训练这么多个模型的方法，就是在训练的过程中，每次都以一定的概率随机丢弃一些输入单元或隐藏单元，从而形成不同的模型结构，这样每次训练的都是不同的模型。
 
+那么问题来了，训练的时候，训练了N多个模型，在预测的时候用哪个呢？
+
+答案是，用整个网络，，所有输入单元和隐藏单元则都不会被丢弃，但是每个单元的权重都会乘以在训练过程中被包含的概率值，从而近似得到bagging的效果，这种方法叫做*权重比例推断（weight scaling inference rule）*。
+
+从数学的角度看，dropout的做法是，近似计算得到所有模型的*几何平均*。
 
 *两个数a和b的算术平均值为$(a+b)/2$，几何平均值为$\sqrt{ab}$
 
@@ -58,9 +63,12 @@ $$\sum_{u}p(u)p(y|x,u)$$
 $$p^{-}_{ensemble}(y|x) = \sqrt[2^d]{\prod_{u}p(y|x,u)}$$
 
 
+权重比例推断的证明：
+![dropout2](./images/dropout2.png)
 
 
-dropout的做法是，近似计算得到所有模型的*几何平均*，所有输入单元和隐藏单元则都不会被丢弃，而是将每一个单元的权重都乘以该单元在训练过程中被包含的概率。这种方法叫做*权重比例推断（weight scaling inference rule）*
+![dropout3](./images/dropout3.png)
+
 
 # tensorflow的实现
 ```
@@ -77,12 +85,3 @@ With probability keep_prob, outputs the input element scaled up by 1 / keep_prob
 tensorflow的做法是，在训练的时候，将权重增大，即除以（1/keep_prob），而在inference的时候，权重保持不变。
 
 从另外一个角度看，dropout减小了模型的有效容量，为了抵消这种影响，需要增大模型规模。
-
-
-权重比例推断的证明：
-![dropout2](./images/dropout2.png)
-
-
-![dropout3](./images/dropout3.png)
-
-
