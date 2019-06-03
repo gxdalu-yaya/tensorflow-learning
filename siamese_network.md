@@ -7,7 +7,24 @@
 
 ![siamese_network](./images/siamese_network.png)
 
-# encoder之后的距离计算
+# encoder之后的距离计算以及对应损失函数
+
+* L2距离以及contrastIve loss， contrastIve loss的公式为：
+$$L = \frac {1}{2N}\sum_{n-1}^{N} yd^2 + (1-y)max(margin-d, 0)^2$$
+* cosine距离以及对应损失函数
+
+pytorch中有一个CosineEmbeddingLoss， 公式为:
+$$loss(x,y) = 
+\begin{cases} 
+1 - cos(x,y)& \text{y==1}\\
+max(0, cos(x,y) + margin)& \text{y==-1}
+\end{cases}$$
+
+* 马氏距离以及对应损失函数
+$$d = exp(-\vert\vert{x}-{y}\vert\vert_1)$$
+$$L= \frac{1}{2N}\sum_{n=1}^{N}(y-d)^2$$
+
+
 
 
 
