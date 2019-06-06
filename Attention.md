@@ -5,7 +5,7 @@
 
 1.当前时间点的decoder隐层状态$h_{t}$,和所有的encoder隐层状态$h_{s}$,计算_attention weights_, 对应公式（1），其中score的计算方式有很多种，公式（4）为两个比较常见的计算方式，其中$h_{s}$对应attention体系中的key和value（key和value一样），$h_{t}$则对应attention体系中的query
 
-![attention_qkv](images/transformer-attention1.png)
+![attention_qkv](images/transformer-attention1.jpg)
 
 2.基于计算好的_attention weights_， 再乘以value本身，得到_context vector_
 
