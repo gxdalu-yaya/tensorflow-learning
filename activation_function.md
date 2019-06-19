@@ -31,7 +31,7 @@ $$=arg_{\theta}max\prod_{i=1}^mp_{model}(x^{(i)};\theta)$$
 $$\theta_{ML} = arg_{\theta}max\sum_{i=1}^mlog p_{model}(x^{(i)};\theta)$$
 
 因为重新缩放损失函数时，argmax不会改变，所以除以m得到和训练数据经验分布$p_{data}^{-}$相关的期望作为准则：
-$$\theta_{ML} = arg_{\theta}maxE_{X～p_{data}^{-}}log p_{model}(x^{(i)};\theta)$$
+$$\theta_{ML} = arg_{\theta}minE_{X～p_{data}^{-}}log p_{model}(x^{(i)};\theta)$$
 
 * 交叉熵
 
